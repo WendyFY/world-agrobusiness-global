@@ -17,6 +17,14 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: { baseDir: process.cwd() },
+    theme: 'light',
+    components: {
+      beforeDashboard: ['@/components/admin/AdminWelcome#AdminWelcome'],
+      graphics: { Logo: '@/components/admin/AdminLogo#AdminLogo' },
+      views: {
+        createFirstUser: { Component: '@/components/admin/FirstAdminSetup#FirstAdminSetup' },
+      },
+    },
   },
   collections: [Users, Pages, ProductCategories, Products, Services],
   globals: [SiteSettings],

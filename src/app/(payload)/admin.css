@@ -1,0 +1,82 @@
+:root {
+  --theme-bg: #f7f5ec;
+  --theme-text: #062a54;
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #f3f5ef;
+  --theme-elevation-100: #e9eee7;
+  --theme-elevation-150: #dbe4da;
+  --theme-elevation-200: #ccd9ce;
+  --theme-elevation-250: #bdcebf;
+  --theme-elevation-300: #adbfaf;
+  --theme-elevation-400: #809887;
+  --theme-elevation-500: #607c69;
+  --theme-elevation-600: #45634f;
+  --theme-elevation-700: #31543f;
+  --theme-elevation-800: #193b2e;
+  --theme-elevation-900: #0b2b22;
+  --theme-elevation-950: #062219;
+  --theme-elevation-1000: #041a14;
+  --theme-border-color: #dbe4da;
+  --theme-input-bg: #ffffff;
+  --theme-success-500: #07872d;
+  --theme-warning-600: #a96b00;
+  --style-radius-s: 8px;
+  --style-radius-m: 14px;
+}
+
+body { background: var(--theme-bg); font-family: 'DM Sans', Arial, sans-serif; }
+.app-header { border-bottom: 1px solid var(--theme-border-color); box-shadow: 0 4px 18px rgba(6, 42, 84, .04); }
+.nav { background: #031733; border-right-color:rgba(247,245,236,.16); }
+.nav__scroll { background:#031733; }
+.nav__wrap { gap:4px; }
+.nav__link,
+.nav__controls a,
+.nav__controls button { color:#f7f5ec; font-size:15px; font-weight:600; line-height:1.55; }
+.nav__link { padding-block:7px; }
+.nav__link:hover,
+.nav__link:focus-visible,
+.nav__link.active { color:#ffffff; }
+.nav__link-indicator { background:#f3b51b; height:22px; width:3px; }
+.nav .nav-group { margin:12px 0 14px; }
+.nav .nav-group__toggle { color:#f3b51b; font-size:12px; font-weight:700; letter-spacing:.12em; line-height:1.5; text-transform:uppercase; }
+.nav .nav-group__toggle:hover,
+.nav .nav-group__toggle:focus-visible { color:#ffffff; }
+.nav .nav-group__indicator svg .stroke { stroke:#f3b51b; }
+.nav__controls { border-top:1px solid rgba(247,245,236,.16); padding-top:18px; }
+.nav__controls a:hover,
+.nav__controls button:hover { color:#f3b51b; }
+.wag-admin-logo { display:flex; align-items:center; gap:10px; color:#062a54; }
+.wag-admin-logo img { width:38px; height:38px; object-fit:contain; border-radius:9px; }
+.wag-admin-logo span { display:grid; gap:2px; line-height:1; }
+.wag-admin-logo strong { font-size:13px; letter-spacing:.12em; }
+.wag-admin-logo small { font-size:8px; letter-spacing:.08em; }
+.wag-admin-welcome { display:flex; justify-content:space-between; align-items:flex-end; gap:32px; margin:0 0 34px; padding:34px 38px; border-radius:18px; color:#fff; background:linear-gradient(120deg,#031733 0%,#064483 68%,#07872d 145%); box-shadow:0 16px 36px rgba(3,23,51,.13); }
+.wag-admin-welcome h1 { margin:0; color:#fff; font-size:clamp(28px,3vw,40px); letter-spacing:-.035em; }
+.wag-admin-welcome p:not(.wag-admin-eyebrow) { max-width:620px; margin:12px 0 0; color:rgba(255,255,255,.78); line-height:1.65; }
+.wag-admin-eyebrow { margin:0 0 10px; color:#f3b51b; font-size:10px; font-weight:700; letter-spacing:.16em; }
+.wag-admin-welcome nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:9px; }
+.wag-admin-welcome nav a { padding:10px 13px; border:1px solid rgba(255,255,255,.27); border-radius:999px; color:#fff; font-size:12px; font-weight:600; text-decoration:none; transition:background .18s ease,border-color .18s ease; }
+.wag-admin-welcome nav a:hover { border-color:#f3b51b; background:rgba(243,181,27,.16); }
+.wag-admin-setup { width:min(100% - 40px,560px); margin:12vh auto; padding:42px; border:1px solid var(--theme-border-color); border-radius:18px; background:#fff; box-shadow:0 20px 60px rgba(3,23,51,.1); }
+.wag-admin-setup h1 { margin:0 0 14px; color:#062a54; font-size:30px; }
+.wag-admin-setup p:not(.wag-admin-eyebrow) { color:#496456; line-height:1.7; }
+.wag-admin-setup code { display:block; margin:20px 0; padding:14px 16px; border-radius:9px; background:#f0f4eb; color:#14572e; }
+.wag-admin-setup a { display:inline-flex; color:#064483; font-weight:700; }
+.btn { border-radius:9px; }
+.login .form-submit .btn { border:0; background:#07872d; color:#fff; font-weight:700; }
+.login .form-submit .btn:hover { background:#066c25; }
+.field-type input:focus, .field-type textarea:focus, .field-type select:focus { border-color:#07872d; box-shadow:0 0 0 3px rgba(7,135,45,.12); }
+.table { border-color:var(--theme-border-color); }
+.table th { color:#31543f; }
+.collection-list__header, .collection-edit__header { border-color:var(--theme-border-color); }
+
+@media(max-width:900px) {
+  .wag-admin-welcome { align-items:flex-start; flex-direction:column; }
+  .wag-admin-welcome nav { justify-content:flex-start; }
+}
+@media(max-width:600px) {
+  .wag-admin-welcome { padding:26px 22px; }
+  .wag-admin-welcome nav { gap:7px; }
+  .wag-admin-welcome nav a { padding:9px 11px; }
+  .wag-admin-setup { width:calc(100% - 28px); padding:28px 22px; }
+}

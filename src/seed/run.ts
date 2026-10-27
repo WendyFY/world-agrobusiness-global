@@ -85,10 +85,28 @@ async function upsertService(payload: Awaited<ReturnType<typeof getPayload>>, se
   else await payload.create({ collection: 'services', data })
 }
 
+async function ensureInitialAdmin(payload: Awaited<ReturnType<typeof getPayload>>): Promise<void> {
+  const email = process.env.ADMIN_EMAIL?.trim()
+  const password = process.env.ADMIN_PASSWORD
+  if (Boolean(email) !== Boolean(password)) {
+    throw new Error('Configurez ensemble ADMIN_EMAIL et ADMIN_PASSWORD pour créer le premier administrateur.')
+  }
+
+  const existingUsers = await payload.find({ collection: 'users', limit: 1, overrideAccess: true })
+  if (existingUsers.docs.length > 0) return
+  if (!email || !password) {
+    throw new Error('Aucun administrateur trouvé. Définissez ADMIN_EMAIL et ADMIN_PASSWORD dans .env, puis relancez le seed.')
+  }
+
+  await payload.create({ collection: 'users', data: { email, password }, overrideAccess: true })
+  console.info(`Compte administrateur initial créé pour ${email}.`)
+}
+
 async function main(): Promise<void> {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required to seed the database.')
   const payload = await getPayload({ config })
   try {
+    await ensureInitialAdmin(payload)
     for (const seed of productCategorySeeds) await upsertProductCategory(payload, seed)
     for (const seed of productSeeds) await upsertProduct(payload, seed)
     for (const seed of serviceSeeds) await upsertService(payload, seed)
