@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { pageSeeds, productSeeds } from './data'
+import { pageSeeds, productCategorySeeds, productSeeds, serviceSeeds } from './data'
 
 const assetDirectory = path.resolve(process.cwd(), 'assets')
 
@@ -38,11 +38,13 @@ async function upsertPage(payload: Awaited<ReturnType<typeof getPayload>>, seed:
 }
 
 async function upsertProduct(payload: Awaited<ReturnType<typeof getPayload>>, seed: (typeof productSeeds)[number]): Promise<void> {
+  const category = await payload.find({ collection: 'product-categories', where: { slug: { equals: seed.category } }, limit: 1 })
+  if (!category.docs[0]) throw new Error(`Catégorie introuvable pour le produit ${seed.slug}.`)
   const gallery = await Promise.all(seed.images.map(async (image) => ({ imageBase64: await imageAsDataURL(image.file), alt: image.alt })))
   const data = {
     name: seed.name,
     slug: seed.slug,
-    category: seed.category,
+    category: category.docs[0].id,
     description: seed.description,
     price: seed.price,
     priceLabel: seed.priceLabel,
@@ -60,11 +62,36 @@ async function upsertProduct(payload: Awaited<ReturnType<typeof getPayload>>, se
   }
 }
 
+async function upsertProductCategory(payload: Awaited<ReturnType<typeof getPayload>>, seed: (typeof productCategorySeeds)[number]): Promise<void> {
+  const data = {
+    name: seed.name,
+    slug: seed.slug,
+    description: seed.description,
+    imageBase64: await imageAsDataURL(seed.image),
+    imageAlt: seed.imageAlt,
+    sortOrder: seed.sortOrder,
+    published: true,
+  }
+  const found = await payload.find({ collection: 'product-categories', where: { slug: { equals: seed.slug } }, limit: 1 })
+  if (found.docs[0]) await payload.update({ collection: 'product-categories', id: found.docs[0].id, data })
+  else await payload.create({ collection: 'product-categories', data })
+}
+
+async function upsertService(payload: Awaited<ReturnType<typeof getPayload>>, seed: (typeof serviceSeeds)[number]): Promise<void> {
+  const gallery = await Promise.all(seed.images.map(async (image) => ({ imageBase64: await imageAsDataURL(image.file), alt: image.alt })))
+  const data = { name: seed.name, slug: seed.slug, description: seed.description, gallery, sortOrder: seed.sortOrder, published: true }
+  const found = await payload.find({ collection: 'services', where: { slug: { equals: seed.slug } }, limit: 1 })
+  if (found.docs[0]) await payload.update({ collection: 'services', id: found.docs[0].id, data })
+  else await payload.create({ collection: 'services', data })
+}
+
 async function main(): Promise<void> {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is required to seed the database.')
   const payload = await getPayload({ config })
   try {
+    for (const seed of productCategorySeeds) await upsertProductCategory(payload, seed)
     for (const seed of productSeeds) await upsertProduct(payload, seed)
+    for (const seed of serviceSeeds) await upsertService(payload, seed)
     for (const seed of pageSeeds) await upsertPage(payload, seed)
     await payload.updateGlobal({ slug: 'site-settings', data: {
       companyName: 'World Agrobusiness Global SARL',
@@ -77,7 +104,7 @@ async function main(): Promise<void> {
       logoBase64: await imageAsDataURL('logo.jpeg'),
       logoAlt: 'Logo World Agrobusiness Global SARL',
     } })
-    console.info(`Seed terminé : ${pageSeeds.length} pages, ${productSeeds.length} produits et paramètres du site.`)
+    console.info(`Seed terminé : ${pageSeeds.length} pages, ${productCategorySeeds.length} catégories, ${productSeeds.length} produits, ${serviceSeeds.length} services et paramètres du site.`)
   } finally {
     await payload.destroy()
   }

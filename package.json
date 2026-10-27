@@ -11,7 +11,14 @@
     "generate:types": "payload generate:types",
     "migrate:create": "payload migrate:create",
     "migrate": "payload migrate",
-    "seed": "node --import tsx/esm src/seed/run.ts"
+    "migrate:down": "payload migrate:down",
+    "migrate:status": "payload migrate:status",
+    "migrate:fresh": "payload migrate:fresh",
+    "seed": "node --env-file=.env --import tsx/esm src/seed/run.ts",
+    "db:migrate": "npm run migrate",
+    "db:seed": "npm run seed",
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "db:reset": "npm run migrate:fresh && npm run db:seed"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.91.0",

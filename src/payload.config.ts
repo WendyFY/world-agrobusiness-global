@@ -2,6 +2,8 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import { Products } from './collections/Products'
+import { ProductCategories } from './collections/ProductCategories'
+import { Services } from './collections/Services'
 import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
 import { SiteSettings } from './globals/SiteSettings'
@@ -16,7 +18,7 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: process.cwd() },
   },
-  collections: [Users, Pages, Products],
+  collections: [Users, Pages, ProductCategories, Products, Services],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: secret ?? 'local-development-secret-replace-before-deploy',

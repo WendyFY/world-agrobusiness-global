@@ -17,17 +17,7 @@ export const Products: CollectionConfig = {
   fields: [
     { name: 'name', type: 'text', required: true, localized: false },
     { name: 'slug', type: 'text', required: true, unique: true, index: true },
-    {
-      name: 'category',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Motoculteur', value: 'motoculteur' },
-        { label: 'Motopompe', value: 'motopompe' },
-        { label: 'Irrigation', value: 'irrigation' },
-        { label: 'Autre équipement', value: 'autre' },
-      ],
-    },
+    { name: 'category', type: 'relationship', relationTo: 'product-categories', required: true, index: true },
     { name: 'description', type: 'textarea' },
     { name: 'price', type: 'number', min: 0 },
     { name: 'priceLabel', type: 'text', admin: { description: 'Ex. À partir de. Le montant reste en FCFA.' } },

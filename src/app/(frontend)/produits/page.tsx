@@ -1,11 +1,17 @@
-import { getPageBySlug, getSiteSettings } from '@/lib/data'
-import { ContentRenderer } from '@/components/ContentRenderer'
-import { ProductGrid } from '@/components/ProductGrid'
+import Link from 'next/link'
+import { getProductCategories } from '@/lib/data'
+
+export const metadata = { title: 'Catégories de produits — World Agrobusiness Global' }
 
 export default async function ProductsPage() {
-  const [page, settings] = await Promise.all([getPageBySlug('produits'), getSiteSettings()])
+  const categories = await getProductCategories()
   return <>
-    {page ? <ContentRenderer blocks={page.blocks} settings={settings} /> : <section className="page-hero"><p className="eyebrow">Nos produits</p><h1>Équipements agro-pastoraux</h1><p className="lead">Découvrez notre catalogue.</p></section>}
-    <section className="products-wrap"><div className="catalogue-heading"><div><p className="eyebrow">Catalogue</p><h2>Équipements disponibles</h2></div><p>Des solutions robustes pour préparer, cultiver et irriguer.</p></div><ProductGrid whatsapp={settings.whatsapp} /></section>
+    <section className="page-hero"><p className="eyebrow">Nos produits</p><h1>Choisissez une catégorie</h1><p className="lead">Parcourez nos équipements agro-pastoraux par catégorie.</p></section>
+    <section className="products-wrap"><div className="product-category-grid">
+      {categories.map((category) => <Link className="product-category-card" href={`/produits/${category.slug}`} key={category.id}>
+        {category.imageBase64 ? <img src={category.imageBase64} alt={category.imageAlt ?? category.name} /> : <div className="product-category-image-empty" />}
+        <div><h2>{category.name}</h2>{category.description ? <p>{category.description}</p> : null}<span>Voir les produits →</span></div>
+      </Link>)}
+    </div>{categories.length === 0 ? <p>Les catégories de produits seront bientôt disponibles.</p> : null}</section>
   </>
 }

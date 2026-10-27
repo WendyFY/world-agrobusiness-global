@@ -69,7 +69,9 @@ export interface Config {
   collections: {
     users: User;
     pages: Page;
+    'product-categories': ProductCategory;
     products: Product;
+    services: Service;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -79,7 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -261,13 +265,29 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-categories".
+ */
+export interface ProductCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  imageBase64?: string | null;
+  imageAlt?: string | null;
+  sortOrder: number;
+  published: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
  */
 export interface Product {
   id: number;
   name: string;
   slug: string;
-  category: 'motoculteur' | 'motopompe' | 'irrigation' | 'autre';
+  category: number | ProductCategory;
   description?: string | null;
   price?: number | null;
   /**
@@ -289,6 +309,31 @@ export interface Product {
       }[]
     | null;
   featuredOnHome?: boolean | null;
+  sortOrder: number;
+  published: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  gallery?:
+    | {
+        imageBase64: string;
+        alt: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Laisser vide pour utiliser le numéro WhatsApp des paramètres du site.
+   */
+  whatsapp?: string | null;
   sortOrder: number;
   published: boolean;
   updatedAt: string;
@@ -327,8 +372,16 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
+        relationTo: 'product-categories';
+        value: number | ProductCategory;
+      } | null)
+    | ({
         relationTo: 'products';
         value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -517,6 +570,21 @@ export interface PagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "product-categories_select".
+ */
+export interface ProductCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  imageBase64?: T;
+  imageAlt?: T;
+  sortOrder?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products_select".
  */
 export interface ProductsSelect<T extends boolean = true> {
@@ -541,6 +609,27 @@ export interface ProductsSelect<T extends boolean = true> {
         id?: T;
       };
   featuredOnHome?: T;
+  sortOrder?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  gallery?:
+    | T
+    | {
+        imageBase64?: T;
+        alt?: T;
+        id?: T;
+      };
+  whatsapp?: T;
   sortOrder?: T;
   published?: T;
   updatedAt?: T;

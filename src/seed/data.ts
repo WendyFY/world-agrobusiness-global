@@ -14,6 +14,36 @@ export type ProductSeed = {
   sortOrder: number
 }
 
+export type ProductCategorySeed = {
+  name: string
+  slug: string
+  description: string
+  image: string
+  imageAlt: string
+  sortOrder: number
+}
+
+export type ServiceSeed = {
+  name: string
+  slug: string
+  description: string
+  images: { file: string; alt: string }[]
+  sortOrder: number
+}
+
+export const productCategorySeeds: ProductCategorySeed[] = [
+  { name: 'Motoculteurs', slug: 'motoculteur', description: 'Des équipements robustes pour préparer et travailler efficacement le sol.', image: 'motoculteur-diesel-14cv-principal.jfif', imageAlt: 'Motoculteur diesel pour les travaux agricoles', sortOrder: 1 },
+  { name: 'Motopompes', slug: 'motopompe', description: 'Des solutions de pompage adaptées à l’irrigation et aux besoins de votre exploitation.', image: 'motopompe-centrifugeuse-17cv.jfif', imageAlt: 'Motopompe centrifugeuse diesel', sortOrder: 2 },
+  { name: 'Irrigation', slug: 'irrigation', description: 'Des équipements et systèmes pour mieux maîtriser l’eau sur votre exploitation.', image: 'irrigation-drip.png', imageAlt: 'Système d’irrigation goutte à goutte', sortOrder: 3 },
+  { name: 'Autres équipements', slug: 'autre', description: 'Découvrez les autres équipements agro-pastoraux proposés par notre équipe.', image: 'agriculture-hero.png', imageAlt: 'Équipements et activités agricoles', sortOrder: 4 },
+]
+
+export const serviceSeeds: ServiceSeed[] = [
+  { name: 'Étude et structuration de projets agricoles', slug: 'etude-projet-agricole', description: 'Nous vous accompagnons dans l’analyse de votre projet, l’identification des besoins et la définition des étapes concrètes de réalisation. Notre équipe vous aide à structurer une activité adaptée à votre terrain, vos objectifs et vos moyens.', images: [{ file: 'agriculture-hero.png', alt: 'Exploitation agricole accompagnée par World Agrobusiness Global' }], sortOrder: 1 },
+  { name: 'Installation de systèmes d’irrigation', slug: 'installation-irrigation', description: 'Nous étudions vos cultures et votre terrain afin de proposer, fournir et installer un système d’irrigation approprié. Goutte à goutte, aspersion ou autres solutions : nous vous conseillons à chaque étape.', images: [{ file: 'irrigation-drip.png', alt: 'Système d’irrigation goutte à goutte' }], sortOrder: 2 },
+  { name: 'Commerce général et import-export', slug: 'commerce-import-export', description: 'Nous facilitons l’accès aux équipements et fournitures utiles à vos activités agro-pastorales grâce à notre service de commerce général et d’import-export.', images: [{ file: 'motoculteur-diesel-14cv.jfif', alt: 'Équipement agricole proposé à la vente' }], sortOrder: 3 },
+]
+
 export type PageSeed = Omit<Page, 'id' | 'createdAt' | 'updatedAt'>
 
 export const productSeeds: ProductSeed[] = [
@@ -86,7 +116,7 @@ export const pageSeeds: PageSeed[] = [
     ],
   },
   {
-    title: 'Services', slug: 'services', metaDescription: 'Équipements, irrigation, étude et structuration de projets agricoles.', showInNavigation: true, sortOrder: 2, blocks: [
+    title: 'Services', slug: 'services', metaDescription: 'Équipements, irrigation, étude et structuration de projets agricoles.', showInNavigation: false, sortOrder: 2, blocks: [
       { blockType: 'hero', eyebrow: 'Nos services', heading: 'Des solutions utiles à chaque étape de votre projet.', lead: 'Notre savoir-faire réunit équipements, conseil et accompagnement pour soutenir vos activités agro-pastorales.' },
       { blockType: 'video', sourceUrl: '/assets/services-agriculture.mp4', label: 'Vidéo de présentation des services agricoles' },
       { blockType: 'cards', heading: 'Nos services', items: [

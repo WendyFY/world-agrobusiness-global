@@ -5,13 +5,6 @@ import type { Product } from '@/lib/types'
 
 type ProductCatalogProps = { products: Product[]; whatsapp: string; searchable: boolean }
 
-const categoryLabel: Record<string, string> = {
-  motoculteur: 'Motoculteur',
-  motopompe: 'Motopompe',
-  irrigation: 'Irrigation',
-  autre: 'Équipement',
-}
-
 export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalogProps) {
   const [query, setQuery] = useState('')
   const [lightbox, setLightbox] = useState<{ image: string; alt: string } | null>(null)
@@ -20,7 +13,7 @@ export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalo
     if (!normalized) return products
     return products.filter((product) => [
       product.name,
-      product.category,
+      typeof product.category === 'number' ? '' : product.category.name,
       product.description ?? '',
       ...((product.specifications ?? []).flatMap((spec) => [spec.label, spec.value])),
     ].join(' ').toLocaleLowerCase('fr').includes(normalized))
@@ -45,12 +38,13 @@ export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalo
     <div className="product-grid">
       {filtered.map((product) => {
         const firstImage = product.gallery?.[0]
+        const categoryName = typeof product.category === 'number' ? 'Équipement' : product.category.name
         const price = typeof product.price === 'number' ? `${product.price.toLocaleString('fr-FR')} FCFA` : null
         const message = encodeURIComponent(`Bonjour, je souhaite avoir des informations sur ${product.name}.`)
         return <article className="product-card" key={product.id}>
           {firstImage ? <button className="product-image" type="button" onClick={() => setLightbox({ image: firstImage.imageBase64, alt: firstImage.alt })}><img src={firstImage.imageBase64} alt={firstImage.alt} /></button> : <div className="product-image product-image-empty" />}
           <div className="product-body">
-            <p className="product-type">{categoryLabel[product.category] ?? 'Équipement'}</p>
+            <p className="product-type">{categoryName}</p>
             <h3>{product.name}</h3>
             {product.description ? <p>{product.description}</p> : null}
             {product.specifications?.length ? <ul>{product.specifications.map((spec, index) => <li key={`${spec.label}-${index}`}>{spec.label} : {spec.value}</li>)}</ul> : null}
