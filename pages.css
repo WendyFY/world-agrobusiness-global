@@ -1,3 +1,5 @@
+@import url("public/styles/pages.css");
+
 .page-hero{
     padding:160px max(6vw,86px) 84px;
     background:#09241c;
