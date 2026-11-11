@@ -21,6 +21,23 @@ export const Products: CollectionConfig = {
     { name: 'description', type: 'textarea' },
     { name: 'price', type: 'number', min: 0 },
     { name: 'priceLabel', type: 'text', admin: { description: 'Ex. À partir de. Le montant reste en FCFA.' } },
+    { 
+      name: 'onPromotion', 
+      type: 'checkbox', 
+      defaultValue: false,
+      admin: {
+        description: 'Activer pour mettre ce produit en promotion',
+      },
+    },
+    { 
+      name: 'promotionalPrice', 
+      type: 'number', 
+      min: 0,
+      admin: {
+        condition: (data) => data.onPromotion === true,
+        description: 'Prix promotionnel (doit être inférieur au prix normal)',
+      },
+    },
     {
       name: 'specifications',
       type: 'array',

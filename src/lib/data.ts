@@ -48,6 +48,60 @@ export async function getProductCategoryBySlug(slug: string): Promise<ProductCat
   return result.docs[0] ?? null
 }
 
+export async function getPromotionalProducts(limit: number = 10): Promise<Product[]> {
+  const payload = await getCMS()
+  const result = await payload.find({
+    collection: 'products',
+    where: {
+      and: [
+        { published: { equals: true } },
+        { onPromotion: { equals: true } },
+      ],
+    },
+    sort: 'sortOrder',
+    limit,
+    depth: 1,
+  })
+  return result.docs
+}
+
+export async function getPromotionalProductsByCategory(categorySlug: string): Promise<Product[]> {
+  const payload = await getCMS()
+  const result = await payload.find({
+    collection: 'products',
+    where: {
+      and: [
+        { published: { equals: true } },
+        { onPromotion: { equals: true } },
+        { category: { equals: categorySlug } },
+      ],
+    },
+    sort: 'sortOrder',
+    limit: 100,
+    depth: 1,
+  })
+  return result.docs
+}
+
+export async function getPromotionalProductsByPriceRange(minPrice: number, maxPrice: number): Promise<Product[]> {
+  const payload = await getCMS()
+  const result = await payload.find({
+    collection: 'products',
+    where: {
+      and: [
+        { published: { equals: true } },
+        { onPromotion: { equals: true } },
+        { promotionalPrice: { greater_than_equal: minPrice } },
+        { promotionalPrice: { less_than_equal: maxPrice } },
+      ],
+    },
+    sort: 'promotionalPrice',
+    limit: 100,
+    depth: 1,
+  })
+  return result.docs
+}
+
 export async function getProductsByCategory(categoryId: number): Promise<Product[]> {
   const payload = await getCMS()
   const result = await payload.find({ collection: 'products', where: { and: [{ published: { equals: true } }, { category: { equals: categoryId } }] }, sort: 'sortOrder', limit: 100, depth: 1 })

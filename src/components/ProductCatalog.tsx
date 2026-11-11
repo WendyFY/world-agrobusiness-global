@@ -43,7 +43,10 @@ export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalo
         const firstImage = product.gallery?.[0]
         const firstImageUrl = typeof firstImage?.image === 'object' && firstImage.image !== null ? firstImage.image.url : null
         const categoryName = typeof product.category === 'number' ? 'Équipement' : product.category.name
-        const price = typeof product.price === 'number' ? `${product.price.toLocaleString('fr-FR')} FCFA` : null
+        const isOnPromotion = product.onPromotion === true
+        const promotionalPrice = isOnPromotion && typeof product.promotionalPrice === 'number' ? product.promotionalPrice : null
+        const originalPrice = typeof product.price === 'number' ? product.price : null
+        const displayPrice = promotionalPrice ?? originalPrice
         const message = encodeURIComponent(`Bonjour, je souhaite avoir des informations sur ${product.name}.`)
         
         const handleAddToCart = () => {
@@ -52,21 +55,32 @@ export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalo
             productId: product.id,
             name: product.name,
             category: categoryName,
-            price: product.price ?? null,
+            price: displayPrice,
             priceLabel: product.priceLabel ?? null,
             image: firstImageUrl,
             imageAlt: firstImage?.alt ?? '',
           })
         }
         
-        return <article className="product-card" key={product.id}>
+        return <article className={`product-card${isOnPromotion ? ' product-card-promo' : ''}`} key={product.id}>
+          {isOnPromotion && <span className="promo-badge">PROMO</span>}
           {firstImageUrl ? <button className="product-image" type="button" onClick={() => setLightbox({ image: firstImageUrl, alt: firstImage?.alt ?? '' })}><img src={firstImageUrl} alt={firstImage?.alt ?? ''} /></button> : <div className="product-image product-image-empty" />}
           <div className="product-body">
             <p className="product-type">{categoryName}</p>
             <h3>{product.name}</h3>
             {product.description ? <p>{product.description}</p> : null}
             {product.specifications?.length ? <ul>{product.specifications.map((spec, index) => <li key={`${spec.label}-${index}`}>{spec.label} : {spec.value}</li>)}</ul> : null}
-            {price ? <p className="price">{product.priceLabel ? `${product.priceLabel} ` : ''}<strong>{price}</strong></p> : null}
+            {displayPrice ? (
+              <div className="price-container">
+                {isOnPromotion && originalPrice && (
+                  <span className="price-original">{originalPrice.toLocaleString('fr-FR')} FCFA</span>
+                )}
+                <p className="price">
+                  {product.priceLabel ? `${product.priceLabel} ` : ''}
+                  <strong>{displayPrice.toLocaleString('fr-FR')} FCFA</strong>
+                </p>
+              </div>
+            ) : null}
             {product.gallery && product.gallery.length > 1 ? <div className="product-gallery-thumbs">{product.gallery.slice(1).map((image, index) => {
               const imageUrl = typeof image.image === 'object' && image.image !== null ? image.image.url : null
               if (!imageUrl) return null

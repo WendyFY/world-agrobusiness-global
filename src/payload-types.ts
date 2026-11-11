@@ -362,6 +362,14 @@ export interface Product {
    * Ex. À partir de. Le montant reste en FCFA.
    */
   priceLabel?: string | null;
+  /**
+   * Activer pour mettre ce produit en promotion
+   */
+  onPromotion?: boolean | null;
+  /**
+   * Prix promotionnel (doit être inférieur au prix normal)
+   */
+  promotionalPrice?: number | null;
   specifications?:
     | {
         label: string;
@@ -849,6 +857,8 @@ export interface ProductsSelect<T extends boolean = true> {
   description?: T;
   price?: T;
   priceLabel?: T;
+  onPromotion?: T;
+  promotionalPrice?: T;
   specifications?:
     | T
     | {
