@@ -11,10 +11,11 @@ const routeFor = (slug: string): string => slug === 'accueil' ? '/' : `/${slug}`
 export function Header({ pages, settings }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const additionalPages = pages.filter((page) => page.slug !== 'a-propos' && page.slug !== 'contact')
+  const logoUrl = typeof settings.logo === 'object' && settings.logo !== null ? settings.logo.url : null
   return (
     <header className={`site-header${menuOpen ? ' open' : ''}`}>
       <Link className="brand" href="/" aria-label="Accueil World Agrobusiness Global">
-        {settings.logoBase64 ? <img src={settings.logoBase64} alt={settings.logoAlt ?? settings.companyName} /> : null}
+        {logoUrl ? <img src={logoUrl} alt={settings.companyName} /> : null}
         <span>WORLD <small>AGROBUSINESS GLOBAL SARL</small></span>
       </Link>
       <button className="menu-toggle" type="button" aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen((isOpen) => !isOpen)}>{menuOpen ? '×' : '☰'}</button>

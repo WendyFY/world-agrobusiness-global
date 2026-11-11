@@ -15,7 +15,15 @@ export const Services: CollectionConfig = {
     { name: 'slug', type: 'text', required: true, unique: true, index: true },
     { name: 'description', type: 'textarea', required: true },
     { name: 'gallery', type: 'array', labels: { singular: 'Image', plural: 'Images' }, fields: [
-      { name: 'imageBase64', type: 'textarea', maxLength: 4_200_000, required: true, admin: { components: { Field: '@/components/Base64ImageField#Base64ImageField' } } },
+      { 
+        name: 'image', 
+        type: 'upload', 
+        relationTo: 'media', 
+        required: true,
+        admin: {
+          description: 'Image du service',
+        },
+      },
       { name: 'alt', type: 'text', required: true },
     ] },
     { name: 'whatsapp', type: 'text', admin: { description: 'Laisser vide pour utiliser le numéro WhatsApp des paramètres du site.' } },

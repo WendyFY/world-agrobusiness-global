@@ -14,8 +14,14 @@ export const ProductCategories: CollectionConfig = {
     { name: 'name', type: 'text', required: true },
     { name: 'slug', type: 'text', required: true, unique: true, index: true },
     { name: 'description', type: 'textarea' },
-    { name: 'imageBase64', type: 'textarea', maxLength: 4_200_000, admin: { components: { Field: '@/components/Base64ImageField#Base64ImageField' } } },
-    { name: 'imageAlt', type: 'text' },
+    { 
+      name: 'image', 
+      type: 'upload', 
+      relationTo: 'media',
+      admin: {
+        description: 'Image de la catégorie',
+      },
+    },
     { name: 'sortOrder', type: 'number', defaultValue: 0, required: true },
     { name: 'published', type: 'checkbox', defaultValue: true, required: true },
   ],

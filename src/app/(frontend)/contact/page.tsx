@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getPageBySlug, getSiteSettings } from '@/lib/data'
+import { ContactForm } from '@/components/ContactForm'
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug('contact')
@@ -54,5 +55,11 @@ export default async function ContactPage() {
     </section>
 
     {settings.mapEmbedUrl ? <figure className="contact-map"><iframe title="Localisation de World Agrobusiness Global" src={settings.mapEmbedUrl} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /></figure> : null}
+
+    <section className="contact-form-section">
+      <p className="eyebrow">Formulaire de contact</p>
+      <h2>Envoyez-nous un message.</h2>
+      <ContactForm whatsapp={settings.whatsapp} />
+    </section>
   </>
 }

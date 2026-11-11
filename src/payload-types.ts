@@ -68,10 +68,16 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    media: Media;
     pages: Page;
     'product-categories': ProductCategory;
     products: Product;
     services: Service;
+    'blog-categories': BlogCategory;
+    blog: Blog;
+    testimonials: Testimonial;
+    'project-categories': ProjectCategory;
+    projects: Project;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,10 +86,16 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
+    'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
+    blog: BlogSelect<false> | BlogSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    'project-categories': ProjectCategoriesSelect<false> | ProjectCategoriesSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -155,6 +167,54 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Texte alternatif pour l'accessibilité
+   */
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    tablet?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
@@ -169,8 +229,11 @@ export interface Page {
         eyebrow: string;
         heading: string;
         lead?: string | null;
-        imageBase64?: string | null;
-        imageAlt?: string | null;
+        /**
+         * Image de la bannière
+         */
+        image?: (number | null) | Media;
+        alt?: string | null;
         id?: string | null;
         blockName?: string | null;
         blockType: 'hero';
@@ -239,7 +302,10 @@ export interface Page {
         blockType: 'contactCallout';
       }
     | {
-        imageBase64: string;
+        /**
+         * Image à afficher
+         */
+        image: number | Media;
         alt: string;
         caption?: string | null;
         id?: string | null;
@@ -272,8 +338,10 @@ export interface ProductCategory {
   name: string;
   slug: string;
   description?: string | null;
-  imageBase64?: string | null;
-  imageAlt?: string | null;
+  /**
+   * Image de la catégorie
+   */
+  image?: (number | null) | Media;
   sortOrder: number;
   published: boolean;
   updatedAt: string;
@@ -303,7 +371,10 @@ export interface Product {
     | null;
   gallery?:
     | {
-        imageBase64: string;
+        /**
+         * Image du produit (JPEG, PNG, WebP, GIF jusqu'à 3 Mo)
+         */
+        image: number | Media;
         alt: string;
         id?: string | null;
       }[]
@@ -325,7 +396,10 @@ export interface Service {
   description: string;
   gallery?:
     | {
-        imageBase64: string;
+        /**
+         * Image du service
+         */
+        image: number | Media;
         alt: string;
         id?: string | null;
       }[]
@@ -336,6 +410,112 @@ export interface Service {
   whatsapp?: string | null;
   sortOrder: number;
   published: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories".
+ */
+export interface BlogCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  sortOrder: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog".
+ */
+export interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  /**
+   * Catégorie de l'article
+   */
+  category: number | BlogCategory;
+  /**
+   * Résumé court de l'article (affiché dans la liste)
+   */
+  excerpt?: string | null;
+  /**
+   * Contenu complet de l'article
+   */
+  content: string;
+  /**
+   * Image de mise en avant de l'article
+   */
+  featuredImage?: (number | null) | Media;
+  /**
+   * Nom de l'auteur
+   */
+  author?: string | null;
+  published: boolean;
+  publishedAt?: string | null;
+  /**
+   * Description pour le SEO
+   */
+  metaDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  authorName: string;
+  company?: string | null;
+  role?: string | null;
+  content: string;
+  rating?: number | null;
+  avatar?: (number | null) | Media;
+  published: boolean;
+  sortOrder: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project-categories".
+ */
+export interface ProjectCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  sortOrder: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  title: string;
+  slug: string;
+  category: number | ProjectCategory;
+  description?: string | null;
+  content?: string | null;
+  gallery?:
+    | {
+        image: number | Media;
+        alt: string;
+        id?: string | null;
+      }[]
+    | null;
+  location?: string | null;
+  client?: string | null;
+  completionDate?: string | null;
+  published: boolean;
+  sortOrder: number;
   updatedAt: string;
   createdAt: string;
 }
@@ -368,6 +548,10 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null)
     | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -382,6 +566,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'services';
         value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'blog-categories';
+        value: number | BlogCategory;
+      } | null)
+    | ({
+        relationTo: 'blog';
+        value: number | Blog;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'project-categories';
+        value: number | ProjectCategory;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: number | Project;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -450,6 +654,58 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        tablet?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
@@ -467,8 +723,8 @@ export interface PagesSelect<T extends boolean = true> {
               eyebrow?: T;
               heading?: T;
               lead?: T;
-              imageBase64?: T;
-              imageAlt?: T;
+              image?: T;
+              alt?: T;
               id?: T;
               blockName?: T;
             };
@@ -543,7 +799,7 @@ export interface PagesSelect<T extends boolean = true> {
         image?:
           | T
           | {
-              imageBase64?: T;
+              image?: T;
               alt?: T;
               caption?: T;
               id?: T;
@@ -576,8 +832,7 @@ export interface ProductCategoriesSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   description?: T;
-  imageBase64?: T;
-  imageAlt?: T;
+  image?: T;
   sortOrder?: T;
   published?: T;
   updatedAt?: T;
@@ -604,7 +859,7 @@ export interface ProductsSelect<T extends boolean = true> {
   gallery?:
     | T
     | {
-        imageBase64?: T;
+        image?: T;
         alt?: T;
         id?: T;
       };
@@ -625,13 +880,96 @@ export interface ServicesSelect<T extends boolean = true> {
   gallery?:
     | T
     | {
-        imageBase64?: T;
+        image?: T;
         alt?: T;
         id?: T;
       };
   whatsapp?: T;
   sortOrder?: T;
   published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories_select".
+ */
+export interface BlogCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog_select".
+ */
+export interface BlogSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  excerpt?: T;
+  content?: T;
+  featuredImage?: T;
+  author?: T;
+  published?: T;
+  publishedAt?: T;
+  metaDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  authorName?: T;
+  company?: T;
+  role?: T;
+  content?: T;
+  rating?: T;
+  avatar?: T;
+  published?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "project-categories_select".
+ */
+export interface ProjectCategoriesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  description?: T;
+  content?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+        id?: T;
+      };
+  location?: T;
+  client?: T;
+  completionDate?: T;
+  published?: T;
+  sortOrder?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -688,8 +1026,10 @@ export interface SiteSetting {
   email: string;
   address: string;
   mapEmbedUrl?: string | null;
-  logoBase64?: string | null;
-  logoAlt?: string | null;
+  /**
+   * Logo de l'entreprise
+   */
+  logo?: (number | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -705,8 +1045,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   email?: T;
   address?: T;
   mapEmbedUrl?: T;
-  logoBase64?: T;
-  logoAlt?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

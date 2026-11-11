@@ -6,6 +6,12 @@ import { ProductCategories } from './collections/ProductCategories'
 import { Services } from './collections/Services'
 import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
+import { Media } from './collections/Media'
+import { Blog } from './collections/Blog'
+import { BlogCategories } from './collections/BlogCategories'
+import { Testimonials } from './collections/Testimonials'
+import { Projects } from './collections/Projects'
+import { ProjectCategories } from './collections/ProjectCategories'
 import { SiteSettings } from './globals/SiteSettings'
 
 const secret = process.env.PAYLOAD_SECRET
@@ -26,7 +32,7 @@ export default buildConfig({
       },
     },
   },
-  collections: [Users, Pages, ProductCategories, Products, Services],
+  collections: [Users, Media, Pages, ProductCategories, Products, Services, BlogCategories, Blog, Testimonials, ProjectCategories, Projects],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: secret ?? 'local-development-secret-replace-before-deploy',

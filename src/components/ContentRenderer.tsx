@@ -9,11 +9,12 @@ export function ContentRenderer({ blocks, settings }: ContentRendererProps) {
     {blocks.map((block, index) => {
       const key = block.id ?? `${block.blockType}-${index}`
       if (block.blockType === 'hero') {
+        const imageUrl = typeof block.image === 'object' && block.image !== null ? block.image.url : null
         return <section className="page-hero" key={key}>
           {block.eyebrow ? <p className="eyebrow">{block.eyebrow}</p> : null}
           <h1>{block.heading}</h1>
           {block.lead ? <p className="lead">{block.lead}</p> : null}
-          {block.imageBase64 ? <figure className="page-image"><img src={block.imageBase64} alt={block.imageAlt ?? ''} /></figure> : null}
+          {imageUrl ? <figure className="page-image"><img src={imageUrl} alt={block.alt ?? ''} /></figure> : null}
         </section>
       }
       if (block.blockType === 'textSection') {
@@ -51,8 +52,12 @@ export function ContentRenderer({ blocks, settings }: ContentRendererProps) {
           <a className="button primary" href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}>WhatsApp : {settings.whatsapp}</a>
         </section>
       }
-      if (block.blockType === 'image' && block.imageBase64) {
-        return <figure className="page-image" key={key}><img src={block.imageBase64} alt={block.alt ?? ''} />{block.caption ? <figcaption>{block.caption}</figcaption> : null}</figure>
+      if (block.blockType === 'image') {
+        const imageUrl = typeof block.image === 'object' && block.image !== null ? block.image.url : null
+        if (imageUrl) {
+          return <figure className="page-image" key={key}><img src={imageUrl} alt={block.alt ?? ''} />{block.caption ? <figcaption>{block.caption}</figcaption> : null}</figure>
+        }
+        return null
       }
       if (block.blockType === 'video' && block.sourceUrl) {
         return <figure className="page-image" key={key}><video controls muted loop playsInline aria-label={block.label ?? 'Vidéo de présentation'}><source src={block.sourceUrl} type="video/mp4" /></video></figure>

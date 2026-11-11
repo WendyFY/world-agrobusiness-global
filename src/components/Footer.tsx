@@ -5,12 +5,13 @@ type FooterProps = { pages: SitePage[]; settings: SiteSettings }
 
 export function Footer({ pages, settings }: FooterProps) {
   const whatsapp = `https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`
+  const logoUrl = typeof settings.logo === 'object' && settings.logo !== null ? settings.logo.url : null
   return (
     <footer>
       <div className="footer-main">
         <div>
           <div className="footer-brand">
-            {settings.logoBase64 ? <img src={settings.logoBase64} alt="" /> : null}
+            {logoUrl ? <img src={logoUrl} alt="" /> : null}
             <span>WORLD AGROBUSINESS<br />GLOBAL SARL</span>
           </div>
           <p className="footer-intro">{settings.tagline}</p>
@@ -27,7 +28,7 @@ export function Footer({ pages, settings }: FooterProps) {
           <address>{settings.address}</address>
         </div>
       </div>
-      <div className="footer-bottom"><p>© {new Date().getFullYear()} {settings.companyName}</p><span className="footer-tag">Cultiver l’avenir</span></div>
+      <div className="footer-bottom"><p>© {new Date().getFullYear()} {settings.companyName}</p><span className="footer-tag">Cultiver l'avenir</span></div>
     </footer>
   )
 }

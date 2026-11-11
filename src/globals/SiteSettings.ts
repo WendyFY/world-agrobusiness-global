@@ -15,7 +15,13 @@ export const SiteSettings: GlobalConfig = {
     { name: 'email', type: 'email', required: true },
     { name: 'address', type: 'textarea', required: true },
     { name: 'mapEmbedUrl', type: 'text' },
-    { name: 'logoBase64', type: 'textarea', maxLength: 4_200_000, admin: { components: { Field: '@/components/Base64ImageField#Base64ImageField' } } },
-    { name: 'logoAlt', type: 'text' },
+    { 
+      name: 'logo', 
+      type: 'upload', 
+      relationTo: 'media',
+      admin: {
+        description: 'Logo de l\'entreprise',
+      },
+    },
   ],
 }

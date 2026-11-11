@@ -15,8 +15,15 @@ export const ContentBlocks: Block[] = [
       { name: 'eyebrow', type: 'text', required: true },
       { name: 'heading', type: 'text', required: true },
       { name: 'lead', type: 'textarea' },
-      { name: 'imageBase64', type: 'textarea', maxLength: 4_200_000, admin: { components: { Field: '@/components/Base64ImageField#Base64ImageField' } } },
-      { name: 'imageAlt', type: 'text' },
+      { 
+        name: 'image', 
+        type: 'upload', 
+        relationTo: 'media',
+        admin: {
+          description: 'Image de la bannière',
+        },
+      },
+      { name: 'alt', type: 'text' },
     ],
   },
   {
@@ -70,7 +77,15 @@ export const ContentBlocks: Block[] = [
     slug: 'image',
     labels: { singular: 'Image', plural: 'Images' },
     fields: [
-      { name: 'imageBase64', type: 'textarea', maxLength: 4_200_000, required: true, admin: { components: { Field: '@/components/Base64ImageField#Base64ImageField' } } },
+      { 
+        name: 'image', 
+        type: 'upload', 
+        relationTo: 'media', 
+        required: true,
+        admin: {
+          description: 'Image à afficher',
+        },
+      },
       { name: 'alt', type: 'text', required: true },
       { name: 'caption', type: 'text' },
     ],

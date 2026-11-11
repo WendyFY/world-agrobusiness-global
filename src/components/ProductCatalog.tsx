@@ -1,11 +1,14 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { useCart } from '@/contexts/CartContext'
+import { Plus } from 'lucide-react'
 import type { Product } from '@/lib/types'
 
 type ProductCatalogProps = { products: Product[]; whatsapp: string; searchable: boolean }
 
 export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalogProps) {
+  const { addToCart } = useCart()
   const [query, setQuery] = useState('')
   const [lightbox, setLightbox] = useState<{ image: string; alt: string } | null>(null)
   const filtered = useMemo(() => {
@@ -38,19 +41,44 @@ export function ProductCatalog({ products, whatsapp, searchable }: ProductCatalo
     <div className="product-grid">
       {filtered.map((product) => {
         const firstImage = product.gallery?.[0]
+        const firstImageUrl = typeof firstImage?.image === 'object' && firstImage.image !== null ? firstImage.image.url : null
         const categoryName = typeof product.category === 'number' ? 'Équipement' : product.category.name
         const price = typeof product.price === 'number' ? `${product.price.toLocaleString('fr-FR')} FCFA` : null
         const message = encodeURIComponent(`Bonjour, je souhaite avoir des informations sur ${product.name}.`)
+        
+        const handleAddToCart = () => {
+          if (!firstImageUrl) return
+          addToCart({
+            productId: product.id,
+            name: product.name,
+            category: categoryName,
+            price: product.price ?? null,
+            priceLabel: product.priceLabel ?? null,
+            image: firstImageUrl,
+            imageAlt: firstImage?.alt ?? '',
+          })
+        }
+        
         return <article className="product-card" key={product.id}>
-          {firstImage ? <button className="product-image" type="button" onClick={() => setLightbox({ image: firstImage.imageBase64, alt: firstImage.alt })}><img src={firstImage.imageBase64} alt={firstImage.alt} /></button> : <div className="product-image product-image-empty" />}
+          {firstImageUrl ? <button className="product-image" type="button" onClick={() => setLightbox({ image: firstImageUrl, alt: firstImage?.alt ?? '' })}><img src={firstImageUrl} alt={firstImage?.alt ?? ''} /></button> : <div className="product-image product-image-empty" />}
           <div className="product-body">
             <p className="product-type">{categoryName}</p>
             <h3>{product.name}</h3>
             {product.description ? <p>{product.description}</p> : null}
             {product.specifications?.length ? <ul>{product.specifications.map((spec, index) => <li key={`${spec.label}-${index}`}>{spec.label} : {spec.value}</li>)}</ul> : null}
             {price ? <p className="price">{product.priceLabel ? `${product.priceLabel} ` : ''}<strong>{price}</strong></p> : null}
-            {product.gallery && product.gallery.length > 1 ? <div className="product-gallery-thumbs">{product.gallery.slice(1).map((image, index) => <button className="product-thumb" type="button" key={`${image.alt}-${index}`} onClick={() => setLightbox({ image: image.imageBase64, alt: image.alt })}><img src={image.imageBase64} alt={image.alt} loading="lazy" /></button>)}</div> : null}
-            <a className="product-link" href={`https://wa.me/${whatsappNumber}?text=${message}`}>Demander la disponibilité <span>→</span></a>
+            {product.gallery && product.gallery.length > 1 ? <div className="product-gallery-thumbs">{product.gallery.slice(1).map((image, index) => {
+              const imageUrl = typeof image.image === 'object' && image.image !== null ? image.image.url : null
+              if (!imageUrl) return null
+              return <button className="product-thumb" type="button" key={`${image.alt}-${index}`} onClick={() => setLightbox({ image: imageUrl, alt: image.alt })}><img src={imageUrl} alt={image.alt} loading="lazy" /></button>
+            })}</div> : null}
+            <div className="product-actions">
+              <button className="button secondary add-to-cart" onClick={handleAddToCart} aria-label={`Ajouter ${product.name} au panier`}>
+                <Plus size={16} />
+                Ajouter au panier
+              </button>
+              <a className="product-link" href={`https://wa.me/${whatsappNumber}?text=${message}`}>Demander la disponibilité <span>→</span></a>
+            </div>
           </div>
         </article>
       })}

@@ -34,7 +34,15 @@ export const Products: CollectionConfig = {
       type: 'array',
       labels: { singular: 'Image', plural: 'Images' },
       fields: [
-        { name: 'imageBase64', type: 'textarea', maxLength: 4_200_000, required: true, admin: { components: { Field: '@/components/Base64ImageField#Base64ImageField' } } },
+        { 
+          name: 'image', 
+          type: 'upload', 
+          relationTo: 'media', 
+          required: true,
+          admin: {
+            description: 'Image du produit (JPEG, PNG, WebP, GIF jusqu\'à 3 Mo)',
+          },
+        },
         { name: 'alt', type: 'text', required: true },
       ],
     },
